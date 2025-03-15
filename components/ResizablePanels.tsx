@@ -46,7 +46,7 @@ export default function ResizablePanel() {
   };
 
   return (
-    <main className="flex h-screen w-screen flex-col p-[0.25rem] md:flex-row md:p-[0.55rem] md:gap-1">
+    <main className="flex h-screen w-screen flex-col p-[0.25rem] md:flex-row md:p-[0.55rem] gap-2 md:gap-1">
       <div
         className="relative h-1/2 w-full rounded-lg bg-gray-100 p-4 shadow-md md:h-full transition-[width] duration-100 ease-out"
         style={{ width: windowWidth > 768 ? `${leftWidthVw}vw` : '100%' }} // Full width on mobile
