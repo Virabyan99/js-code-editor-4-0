@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { IconCircleDotted } from '@tabler/icons-react';
+import IconWithHover from "./IconWithHover";
 
 const MIN_WIDTH_VW = 24;
 const MAX_WIDTH_VW = 70;
@@ -51,11 +52,11 @@ export default function ResizablePanel() {
         className="relative h-1/2 w-full rounded-lg bg-gray-100 p-4 shadow-md md:h-full transition-[width] duration-100 ease-out"
         style={{ width: `${leftWidthVw}vw` }}
       >
-        <h2 className="ml-5">Left Panel</h2>
-        <IconCircleDotted className="absolute left-2 top-2" />
-        <IconCircleDotted className="absolute right-2 top-2" />
-        <IconCircleDotted className="absolute bottom-2 left-2" />
-        <IconCircleDotted className="absolute bottom-2 right-2" />
+        <h2 className="ml-7">Left Panel</h2>
+        <IconWithHover className="absolute left-2 top-2" />
+        <IconWithHover className="absolute right-2 top-2" />
+        <IconWithHover className="absolute bottom-2 left-2" />
+        <IconWithHover className="absolute bottom-2 right-2" />
       </div>
       <div
         className="h-4 w-full  md:h-full md:w-1 md:cursor-ew-resize hidden md:block"
@@ -64,11 +65,11 @@ export default function ResizablePanel() {
         aria-label="Resize panels"
       ></div>
       <div className="relative h-1/2 w-full rounded-lg bg-gray-100 p-4 shadow-md md:h-full md:flex-1">
-        <h2 className="ml-5">Right Panel</h2>
-        <IconCircleDotted className="absolute left-2 top-2" />
-        <IconCircleDotted className="absolute right-2 top-2" />
-        <IconCircleDotted className="absolute bottom-2 left-2" />
-        <IconCircleDotted className="absolute bottom-2 right-2" />
+        <h2 className="ml-7">Right Panel</h2>
+        <IconWithHover className="absolute left-2 top-2" />
+        <IconWithHover className="absolute right-2 top-2" />
+        <IconWithHover className="absolute bottom-2 left-2" />
+        <IconWithHover className="absolute bottom-2 right-2" />
       </div>
     </main>
   );
