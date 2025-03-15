@@ -8,21 +8,19 @@ interface IconWithHoverProps {
 export default function IconWithHover({ className }: IconWithHoverProps) {
   return (
     <motion.div
-      className={`rounded-full bg-gray-300 p-1 ${className}`}
-      whileHover={{ backgroundColor: '#000000 ', scale: 1.1, rotate: 360, transform: 'rotate(360deg)' }}
-      transition={{ 
-        backgroundColor: { duration: 0.9 }, // Background color change takes 0.5s
-        scale: { duration: 0.5 },           // Scale can remain at 0.5s
-        rotate: { duration: 0.5 }           // Rotate can remain at 0.5s
-      }}
+      initial={{ backgroundColor: '#f3f4f6' }} // Initial color equivalent to bg-gray-100
+      whileHover={{ backgroundColor: '#000000', scale: 1.1, rotate: 360 }}
+      transition={{ duration: 0.7 }} // Smooth transition over 0.7 seconds
+      className={`rounded-full p-1 ${className}`} // Removed bg-gray-100
       role="button"
       aria-label="Interactive icon"
     >
-      <motion.div 
-        whileHover={{ color: '#ffffff' }}
-        transition={{ color: { duration: 0.9 } }} // Text/icon color change takes 0.5s
+      <motion.div
+        initial={{ color: '#000000' }} // Explicit initial color for the icon
+        whileHover={{ color: '#ffffff' }} // Smoothly transitions to white
+        transition={{ duration: 0.7 }} // Matches outer transition duration
       >
-        <IconCircleDotted />
+        <IconCircleDotted size={12} /> {/* Half size: 12px */}
       </motion.div>
     </motion.div>
   );

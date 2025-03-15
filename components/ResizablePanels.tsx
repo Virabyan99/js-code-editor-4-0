@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { IconCircleDotted } from '@tabler/icons-react';
 import IconWithHover from "./IconWithHover";
 
 const MIN_WIDTH_VW = 24;
@@ -47,10 +46,10 @@ export default function ResizablePanel() {
   };
 
   return (
-    <main className="flex h-screen w-screen flex-col p-4 md:flex-row md:p-[2vw] md:gap-1">
+    <main className="flex h-screen w-screen flex-col p-[0.25rem] md:flex-row md:p-[0.25rem] md:gap-1">
       <div
         className="relative h-1/2 w-full rounded-lg bg-gray-100 p-4 shadow-md md:h-full transition-[width] duration-100 ease-out"
-        style={{ width: `${leftWidthVw}vw` }}
+        style={{ width: windowWidth > 768 ? `${leftWidthVw}vw` : '100%' }} // Full width on mobile
       >
         <h2 className="ml-7">Left Panel</h2>
         <IconWithHover className="absolute left-2 top-2" />
@@ -59,7 +58,7 @@ export default function ResizablePanel() {
         <IconWithHover className="absolute bottom-2 right-2" />
       </div>
       <div
-        className="h-4 w-full  md:h-full md:w-1 md:cursor-ew-resize hidden md:block"
+        className="h-4 w-full md:h-full md:w-1 md:cursor-ew-resize hidden md:block" // Hidden on mobile
         onMouseDown={handleMouseDown}
         role="separator"
         aria-label="Resize panels"
