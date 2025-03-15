@@ -1,6 +1,6 @@
-import ResizablePanels from "@/components/ResizablePanels";
+import ResizablePanel from "@/components/ResizablePanels";
 
 
 export default function Home() {
-  return <ResizablePanels />;
+  return <ResizablePanel />;
 }
