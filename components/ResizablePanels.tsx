@@ -1,17 +1,24 @@
-'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import IconWithHover from './IconWithHover';
+
+
+
+
+
+
+
+
+
+"use client";
+import { useState, useEffect } from "react";
+import IconWithHover from "./IconWithHover";
 
 const MIN_WIDTH_VW = 24;
 const MAX_WIDTH_VW = 70;
 const INITIAL_WIDTH_VW = 48;
 
-export default function ResizablePanels() {
+export default function ResizablePanel() {
+  const [leftWidthVw, setLeftWidthVw] = useState(INITIAL_WIDTH_VW);
   const [windowWidth, setWindowWidth] = useState(0);
-  const x = useMotionValue(0);
-  const leftWidthVw = useMotionValue(INITIAL_WIDTH_VW);
 
   // Update window width on mount and resize
   useEffect(() => {
@@ -19,57 +26,53 @@ export default function ResizablePanels() {
       setWindowWidth(window.innerWidth);
     };
     updateWindowWidth();
-    window.addEventListener('resize', updateWindowWidth);
-    return () => window.removeEventListener('resize', updateWindowWidth);
+    window.addEventListener("resize", updateWindowWidth);
+    return () => window.removeEventListener("resize", updateWindowWidth);
   }, []);
 
-  // Update leftWidthVw based on drag offset
-  useEffect(() => {
-    if (windowWidth === 0) return;
-    const unsubscribe = x.onChange((dragOffset) => {
-      const deltaVw = (dragOffset / windowWidth) * 100;
-      const newWidth = INITIAL_WIDTH_VW + deltaVw;
-      const clampedWidth = Math.max(MIN_WIDTH_VW, Math.min(MAX_WIDTH_VW, newWidth));
-      leftWidthVw.set(clampedWidth);
-    });
-    return () => unsubscribe();
-  }, [windowWidth, x, leftWidthVw]);
+  // Handle divider dragging
+  const handleMouseDown = (e) => {
+    e.preventDefault(); // Prevent text selection
+    const initialMouseX = e.clientX;
+    const initialLeftWidthVw = leftWidthVw;
 
-  // Transform leftWidthVw to a string with 'vw' units
-  const leftWidth = useTransform(leftWidthVw, (vw) => `${vw}vw`);
+    const handleMouseMove = (e) => {
+      e.preventDefault();
+      if (windowWidth === 0) return; // Avoid division by zero
+      const deltaX = e.clientX - initialMouseX; // Pixels moved
+      const deltaVw = (deltaX / windowWidth) * 120; // Convert to vw
+      const newLeftWidthVw = initialLeftWidthVw + deltaVw;
+      const clampedWidth = Math.max(MIN_WIDTH_VW, Math.min(MAX_WIDTH_VW, newLeftWidthVw));
+      setLeftWidthVw(clampedWidth);
+    };
 
-  // Calculate drag constraints
-  const dragConstraints = useMemo(() => {
-    if (windowWidth === 0) return { left: 0, right: 0 };
-    const vwToPx = windowWidth / 100;
-    const leftConstraint = -(INITIAL_WIDTH_VW - MIN_WIDTH_VW) * vwToPx; // -24vw in pixels
-    const rightConstraint = (MAX_WIDTH_VW - INITIAL_WIDTH_VW) * vwToPx; // 22vw in pixels
-    return { left: leftConstraint, right: rightConstraint };
-  }, [windowWidth]);
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
 
   return (
-    <main className="flex h-screen w-screen flex-col p-[0.25rem] md:flex-row md:p-[0.55rem] gap-2 md:gap-1">
-      <motion.div
+    <main className="flex h-screen w-screen flex-col p-[0.25rem] md:flex-row md:p-[0.75rem] gap-2 md:gap-1">
+      <div
         className="relative h-1/2 w-full rounded-lg bg-gray-100 p-4 shadow-md md:h-full transition-[width] duration-100 ease-out"
-        style={{ width: windowWidth > 768 ? leftWidth : '100%' }}
+        style={{ width: windowWidth > 768 ? `${leftWidthVw}vw` : '100%' }} // Full width on mobile
       >
         <h2 className="ml-7">Left Panel</h2>
         <IconWithHover className="absolute left-2 top-2" />
         <IconWithHover className="absolute right-2 top-2" />
         <IconWithHover className="absolute bottom-2 left-2" />
         <IconWithHover className="absolute bottom-2 right-2" />
-      </motion.div>
-
-      <motion.div
-        className="h-4 w-full md:h-full md:w-1 md:cursor-ew-resize z-30 bg-gray-400 hidden md:block"
-        drag="x"
-        dragConstraints={dragConstraints}
-        dragElastic={0}
-        style={{ x }}
+      </div>
+      <div
+        className="h-4 w-full md:h-full md:w-1 md:cursor-ew-resize hidden md:block" // Hidden on mobile
+        onMouseDown={handleMouseDown}
         role="separator"
         aria-label="Resize panels"
-      />
-
+      ></div>
       <div className="relative h-1/2 w-full rounded-lg bg-gray-100 p-4 shadow-md md:h-full md:flex-1">
         <h2 className="ml-7">Right Panel</h2>
         <IconWithHover className="absolute left-2 top-2" />
