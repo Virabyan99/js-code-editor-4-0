@@ -13,7 +13,7 @@ export default function ResizablePanel() {
   // Spring animation for the panel width
   const [props, api] = useSpring(() => ({
     width: INITIAL_WIDTH_VW,
-    config: { tension: 300, friction: 30 },
+    config: { tension: 50, friction: 30, mass: 1 },
   }));
 
   // Update window width on mount and resize
