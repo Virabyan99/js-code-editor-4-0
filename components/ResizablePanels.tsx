@@ -1,7 +1,9 @@
+// components/ResizablePanels.tsx
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSpring, animated } from "react-spring";
 import IconWithHover from "./IconWithHover";
+import { useCodeMirror } from "@/hooks/useCodeMirror";
 
 const MIN_WIDTH_VW = 24;
 const MAX_WIDTH_VW = 70;
@@ -9,6 +11,8 @@ const INITIAL_WIDTH_VW = 48;
 
 export default function ResizablePanel() {
   const [windowWidth, setWindowWidth] = useState(0);
+  const editorContainerRef = useRef<HTMLDivElement>(null); // Ref for the editor container
+  const { editorView } = useCodeMirror(editorContainerRef); // Initialize CodeMirror
 
   // Spring animation for the panel width
   const [props, api] = useSpring(() => ({
@@ -25,19 +29,19 @@ export default function ResizablePanel() {
   }, []);
 
   // Handle divider dragging
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     const initialMouseX = e.clientX;
-    const initialWidthVw = props.width.get(); // Get current spring value
+    const initialWidthVw = props.width.get();
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       e.preventDefault();
       if (windowWidth === 0) return;
       const deltaX = e.clientX - initialMouseX;
       const deltaVw = (deltaX / windowWidth) * 100;
       const newWidthVw = initialWidthVw + deltaVw;
       const clampedWidth = Math.max(MIN_WIDTH_VW, Math.min(MAX_WIDTH_VW, newWidthVw));
-      api.start({ width: clampedWidth }); // Update spring directly
+      api.start({ width: clampedWidth });
     };
 
     const handleMouseUp = () => {
@@ -54,10 +58,11 @@ export default function ResizablePanel() {
       <animated.div
         className="relative h-1/2 w-full rounded-lg bg-gray-100 p-4 shadow-md md:h-full"
         style={{
-          width: windowWidth > 768 ? props.width.to((w) => `${w}vw`) : "100%", // Use props.width
+          width: windowWidth > 768 ? props.width.to((w) => `${w}vw`) : "100%",
         }}
       >
-        <h2 className="ml-7">Left Panel</h2>
+        {/* Replace static content with CodeMirror */}
+        <div ref={editorContainerRef} className="h-full w-full" />
         <IconWithHover className="absolute left-2 top-2" />
         <IconWithHover className="absolute right-2 top-2" />
         <IconWithHover className="absolute bottom-2 left-2" />
